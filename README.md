@@ -1,1 +1,0 @@
-This mod allows infinite charge for player's flashlight. 
