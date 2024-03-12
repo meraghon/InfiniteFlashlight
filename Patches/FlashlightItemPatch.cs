@@ -20,7 +20,18 @@ namespace InfiniteFlashlight.Patches
             }
             if (__instance.IsOwner && __instance.isBeingUsed && __instance.itemProperties.requiresBattery)
             {
-                __instance.insertedBattery.charge = float.MaxValue;
+                if (__instance.insertedBattery.charge > 0f) {
+                    if (!__instance.itemProperties.itemIsTrigger) {
+                        __instance.insertedBattery.charge -= 0;  // Don't change the charge level of the battery.
+                    }
+                }
+                else if (!__instance.insertedBattery.empty) {
+                    __instance.insertedBattery.empty = true;
+                    if (__instance.isBeingUsed) {
+                        __instance.isBeingUsed = false;
+                        // Omit code to use up battery levels.
+                    }
+                }
             }
         }
 
