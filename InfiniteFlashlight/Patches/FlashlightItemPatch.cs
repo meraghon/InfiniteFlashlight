@@ -8,16 +8,20 @@ namespace InfiniteFlashlight.Patches
     {
         [HarmonyPatch(nameof(FlashlightItem.Update))]
         [HarmonyPostfix]
-        static void FlashlightItemUpdatePostfix(FlashlightItem instance)
+        static void InfiniteFlashlightPatch(FlashlightItem __instance)
         {
-            if (instance.IsOwner)
+            if (__instance == null)
             {
-                if (instance.isBeingUsed && instance.itemProperties.requiresBattery)
+                return;
+            }
+            if (__instance.IsOwner && __instance.isBeingUsed && __instance.itemProperties.requiresBattery)
+            {
+                if (__instance.insertedBattery.charge > 0f)
                 {
-                    if ((double)instance.insertedBattery.charge > 0.0)
+                    if (!__instance.itemProperties.itemIsTrigger)
                     {
-                        if (instance.itemProperties.itemIsTrigger)
-                            instance.insertedBattery.charge += Time.deltaTime / instance.itemProperties.batteryUsage;
+                        // Adds charge as battery is used 
+                        __instance.insertedBattery.charge += Time.deltaTime / __instance.itemProperties.batteryUsage;
                     }
                 }
             }
